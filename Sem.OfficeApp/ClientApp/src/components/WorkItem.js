@@ -1,6 +1,6 @@
 ﻿import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Table, TableContainer, TableHead, TableCell, TableBody, TableRow, Modal, Button, TextField } from '@material-ui/core';
+import { Table, TableContainer, TableHead, TableCell, TableBody, TableRow, Modal, Button, TextField, Select, MenuItem, InputLabel } from '@material-ui/core';
 import { Edit, Delete } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -30,12 +30,13 @@ export default function WorkItem() {
 
     const styles = useStyles();
     const [data, setData] = useState([]);
+    const [empresas, setEmpresas] = useState([]);
     const [modalInsertar, setModalInsertar] = useState(false);
 
     const [obraSeleccionada, setObraSeleccionada] = useState({
         titulo:'',
-        decripcion:'',
-        empresa: ''
+        descripcion:'',
+        idEmpresa: ''
     });
 
     const handleChange = e => {
@@ -55,11 +56,24 @@ export default function WorkItem() {
                 console.log(response);
             })
     }
+    const obtenerEmpresas = async () => {
+        await axios.get('api/v1/Company')
+            .then(response => {
+                setEmpresas(response.data);
+            })
+            .catch(response => {
+                console.log(response);
+            })
+    }
 
     const insertarObra = async () => {
         await axios.post(baseUrl, obraSeleccionada)
         .then(response => {
-            setData(data.concat(response.data))
+            setData(data.concat({
+                idEmpresa: response.data,
+                titulo: obraSeleccionada.titulo,
+                descripcion: obraSeleccionada.descripcion
+            }))
             abrirCerrarModalInsertar()
         })
         .catch(response => {
@@ -73,6 +87,7 @@ export default function WorkItem() {
 
     useEffect(async () => {
         await obtenerObras();
+        await obtenerEmpresas();
     }, {})
 
     const bodyInsertar = (
@@ -82,7 +97,18 @@ export default function WorkItem() {
             <br />
             <TextField name="descripcion" className={styles.inputMaterial} label="Descripción" onChange={handleChange}/>
             <br />
-            <TextField name="empresa" className={styles.inputMaterial} label="Empresa" onChange={handleChange}/>
+            <InputLabel id="label-empresa-modal-crear">Empresa</InputLabel>
+            <Select
+            name="idEmpresa"
+            idLabel="label-empresa-modal-crear"
+            onChange={handleChange}
+            className={styles.inputMaterial}>
+                {empresas.map(item => (
+                    <MenuItem value={item.id}>{item.name}</MenuItem>
+                    ))
+                }
+            </Select>
+
             <br /><br />
             <div align="right">
                 <Button color="primary" onClick={insertarObra}>Insertar</Button>
