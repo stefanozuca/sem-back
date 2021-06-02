@@ -5,10 +5,11 @@ using System.Text;
 
 namespace Sem.Domain.Entities
 {
-    public class WorkItem : BaseEntity
+    public class WorkItem //: BaseEntity
     {
-        public string Titulo { get; set; }
-        public string Descripcion { get; set; }
-        public Company Empresa { get; set; }
+        public int WorkItemId { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public Company Company { get; set; }
     }
 }

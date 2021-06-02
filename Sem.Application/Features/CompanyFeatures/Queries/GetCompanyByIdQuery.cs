@@ -24,7 +24,7 @@ namespace Sem.Application.Features.CompanyFeatures.Queries
 
             public async Task<Company> Handle(GetCompanyByIdQuery request, CancellationToken cancellationToken)
             {
-                var company = _context.Companies.Where(x => x.Id == request.Id).FirstOrDefault();
+                var company = _context.Companies.Where(x => x.CompanyId == request.Id).FirstOrDefault();
 
                 return company == null ? null : company;
             }

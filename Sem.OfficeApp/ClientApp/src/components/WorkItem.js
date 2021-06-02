@@ -32,11 +32,14 @@ export default function WorkItem() {
     const [data, setData] = useState([]);
     const [empresas, setEmpresas] = useState([]);
     const [modalInsertar, setModalInsertar] = useState(false);
+    const [modalEditar, setModalEditar] = useState(false);
+    const [modalEliminar, setModalEliminar] = useState(false);
 
     const [obraSeleccionada, setObraSeleccionada] = useState({
-        titulo:'',
-        descripcion:'',
-        idEmpresa: ''
+        workItemId:'',
+        title:'',
+        description:'',
+        company: ''
     });
 
     const handleChange = e => {
@@ -50,6 +53,7 @@ export default function WorkItem() {
     const obtenerObras = async () => {
         await axios.get(baseUrl)
             .then(response => {
+                console.log(response.data)
                 setData(response.data);
             })
             .catch(response => {
@@ -67,12 +71,17 @@ export default function WorkItem() {
     }
 
     const insertarObra = async () => {
-        await axios.post(baseUrl, obraSeleccionada)
+        await axios.post(baseUrl, {
+            companyId: obraSeleccionada.company && obraSeleccionada.company.companyId,
+            title: obraSeleccionada.title,
+            description: obraSeleccionada.description
+        })
         .then(response => {
             setData(data.concat({
-                idEmpresa: response.data,
-                titulo: obraSeleccionada.titulo,
-                descripcion: obraSeleccionada.descripcion
+                workItemId: obraSeleccionada.workItemId,
+                title: obraSeleccionada.title,
+                description: obraSeleccionada.description,
+                company: obraSeleccionada.company
             }))
             abrirCerrarModalInsertar()
         })
@@ -81,8 +90,54 @@ export default function WorkItem() {
         })
     }
 
+    const actualizarObra = async () => {
+        console.log(obraSeleccionada);
+        await axios.put(baseUrl + '/Update', {
+            workItemId: obraSeleccionada.workItemId,
+            title: obraSeleccionada.title,
+            description: obraSeleccionada.description,
+            companyId: obraSeleccionada.companyId
+        })
+        .then(response => {
+            var dataNueva = data;
+            dataNueva.map(obra =>{
+                if (obraSeleccionada.workItemId === obra.workItemId){
+                    obra.title = obraSeleccionada.title;
+                    obra.description = obraSeleccionada.description;
+                    obra.companyId = obraSeleccionada.companyId;
+                }
+            })
+            setData(dataNueva);
+            abrirCerrarModalEditar();
+        })
+        .catch(response => {
+            console.log(response);
+        })
+    }
+
+    const eliminarObra = async () => {
+        await axios.delete(baseUrl + '/' + obraSeleccionada.workItemId)
+        .then(response => {
+            setData(data.filter(obra => obra.workItemId !== obraSeleccionada.workItemId));
+            abrirCerrarModalEliminar();
+        })
+    }
+
     const abrirCerrarModalInsertar = () => {
         setModalInsertar(!modalInsertar);
+    }
+
+    const abrirCerrarModalEditar = () => {
+        setModalEditar(!modalEditar);
+    }
+    
+    const abrirCerrarModalEliminar = () => {
+        setModalEliminar(!modalEliminar);
+    }
+
+    const seleccionarObra = (obra,caso) => {
+        setObraSeleccionada(obra);
+        (caso === 'Editar') ? abrirCerrarModalEditar() : abrirCerrarModalEliminar()
     }
 
     useEffect(async () => {
@@ -93,26 +148,63 @@ export default function WorkItem() {
     const bodyInsertar = (
         <div className={styles.modal}>
             <h4>Agregar nueva obra</h4>
-            <TextField name="titulo" className={styles.inputMaterial} label="Titulo" onChange={handleChange}/>
+            <TextField name="title" className={styles.inputMaterial} label="Titlo" onChange={handleChange}/>
             <br />
-            <TextField name="descripcion" className={styles.inputMaterial} label="Descripción" onChange={handleChange}/>
+            <TextField name="description" className={styles.inputMaterial} label="Descripción" onChange={handleChange}/>
             <br />
             <InputLabel id="label-empresa-modal-crear">Empresa</InputLabel>
             <Select
-            name="idEmpresa"
+            name="companyId"
             idLabel="label-empresa-modal-crear"
             onChange={handleChange}
             className={styles.inputMaterial}>
                 {empresas.map(item => (
-                    <MenuItem value={item.id}>{item.name}</MenuItem>
+                    <MenuItem value={item.companyId}>{item.name}</MenuItem>
                     ))
                 }
             </Select>
-
             <br /><br />
             <div align="right">
-                <Button color="primary" onClick={insertarObra}>Insertar</Button>
-                <Button onClick={abrirCerrarModalInsertar}>Cancelar</Button>
+                <Button color="primary" onClick={()=>insertarObra()}>Insertar</Button>
+                <Button onClick={()=>abrirCerrarModalInsertar()}>Cancelar</Button>
+            </div>
+        </div>
+        )
+
+    const bodyEditar = (
+        <div className={styles.modal}>
+            <h4>Editar obra</h4>
+            <TextField name="title" className={styles.inputMaterial} label="Titulo" onChange={handleChange} value={obraSeleccionada && obraSeleccionada.title}/>
+            <br />
+            <TextField name="description" className={styles.inputMaterial} label="Descripción" onChange={handleChange} value={obraSeleccionada && obraSeleccionada.description}/>
+            <br />
+            <InputLabel id="label-empresa-modal-crear">Empresa</InputLabel>
+            <Select
+            value={obraSeleccionada && obraSeleccionada.company && obraSeleccionada.company.companyId}
+            name="companyId"
+            idLabel="label-empresa-modal-crear"
+            onChange={handleChange}
+            className={styles.inputMaterial}>
+                {empresas.map(item => (
+                    <MenuItem value={item.companyId}>{item.name}</MenuItem>
+                    ))
+                }
+            </Select>
+            <br /><br />
+            <div align="right">
+                <Button color="primary" onClick={()=>actualizarObra()}>Insertar</Button>
+                <Button onClick={()=>abrirCerrarModalEditar()}>Cancelar</Button>
+            </div>
+        </div>
+        )
+
+    const bodyEliminar = (
+        <div className={styles.modal}>
+            <p>¿Estás seguro que deseas eliminar la esta obra?</p>
+            <br /><br />
+            <div align="right">
+                <Button color="secondary" onClick={()=>eliminarObra()}>Si</Button>
+                <Button onClick={()=>abrirCerrarModalEliminar()}>No</Button>
             </div>
         </div>
         )
@@ -121,7 +213,7 @@ export default function WorkItem() {
         <div>
             <h1>Obras</h1>
             <br/>
-            <Button onClick={abrirCerrarModalInsertar}>Insertar</Button>
+            <Button onClick={()=>abrirCerrarModalInsertar()}>Insertar</Button>
             <br/>
             <TableContainer>
                 <Table>
@@ -135,14 +227,14 @@ export default function WorkItem() {
                     </TableHead>
                     <TableBody>
                         {data.map(item => (
-                            <TableRow key={item.id}>
-                                <TableCell>{item.titulo}</TableCell>
-                                <TableCell>{item.descripcion}</TableCell>
-                                <TableCell>{item.empresa}</TableCell>
+                            <TableRow key={item.workItemId}>
+                                <TableCell>{item.title}</TableCell>
+                                <TableCell>{item.description}</TableCell>
+                                <TableCell>{item.company && item.company.name}</TableCell>
                                 <TableCell>
-                                    <Edit />
+                                    <Edit onClick={()=>seleccionarObra(item, 'Editar')} className={styles.iconos}/>
                                     &nbsp;&nbsp;&nbsp;
-                                    <Delete />
+                                    <Delete onClick={()=>seleccionarObra(item, 'Eliminar')} className={styles.iconos}/>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -154,6 +246,18 @@ export default function WorkItem() {
             open={modalInsertar}
             onClose={abrirCerrarModalInsertar}>
                 {bodyInsertar}
+            </Modal>
+
+            <Modal
+            open={modalEditar}
+            onClose={abrirCerrarModalEditar}>
+                {bodyEditar}
+            </Modal>
+
+            <Modal
+            open={modalEliminar}
+            onClose={abrirCerrarModalEliminar}>
+                {bodyEliminar}
             </Modal>
         </div>
     );

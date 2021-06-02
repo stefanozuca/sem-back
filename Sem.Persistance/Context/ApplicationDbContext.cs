@@ -27,10 +27,7 @@ namespace Sem.Persistance.Context
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<WorkItem>()
-                .HasOne(c => c.Empresa)
-                .WithMany(w => w.WorkItems)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.SetNull);
+                .HasOne(c => c.Company);
 
         }
     }

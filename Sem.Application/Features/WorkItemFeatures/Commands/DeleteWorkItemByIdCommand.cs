@@ -11,7 +11,7 @@ namespace Sem.Application.Features.WorkItemFeatures.Commands
 {
     public class DeleteWorkItemByIdCommand : IRequest<int>
     {
-        public int Id { get; set; }
+        public int WorkItemId { get; set; }
 
         public class DeleteWorkItemByIdCommandHandler : IRequestHandler<DeleteWorkItemByIdCommand, int>
         {
@@ -23,11 +23,11 @@ namespace Sem.Application.Features.WorkItemFeatures.Commands
 
             public async Task<int> Handle(DeleteWorkItemByIdCommand request, CancellationToken cancellationToken)
             {
-                var workItem = _context.WorkItems.Where(x => x.Id == request.Id).FirstOrDefault();
+                var workItem = _context.WorkItems.Where(x => x.WorkItemId == request.WorkItemId).FirstOrDefault();
                 if (workItem == null) return default;
                 _context.WorkItems.Remove(workItem);
                 await _context.SaveChangesAsync();
-                return workItem.Id;
+                return workItem.WorkItemId;
             }
         }
     }

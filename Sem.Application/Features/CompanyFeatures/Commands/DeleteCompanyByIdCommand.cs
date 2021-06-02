@@ -23,11 +23,11 @@ namespace Sem.Application.Features.CompanyFeatures.Commands
 
             public async Task<int> Handle(DeleteCompanyByIdCommand request, CancellationToken cancellationToken)
             {
-                var company = _context.WorkItems.Where(x => x.Id == request.Id).FirstOrDefault();
+                var company = _context.Companies.Where(x => x.CompanyId == request.Id).FirstOrDefault();
                 if (company == null) return default;
-                _context.WorkItems.Remove(company);
+                _context.Companies.Remove(company);
                 await _context.SaveChangesAsync();
-                return company.Id;
+                return company.CompanyId;
             }
         }
     }

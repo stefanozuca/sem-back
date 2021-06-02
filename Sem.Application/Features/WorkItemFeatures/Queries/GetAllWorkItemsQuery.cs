@@ -21,11 +21,10 @@ namespace Sem.Application.Features.WorkItemFeatures.Queries
             }
             public async Task<IEnumerable<WorkItem>> Handle(GetAllWorkItemsQuery query, CancellationToken cancellationToken)
             { 
-                var workItemList = await _context.WorkItems.ToListAsync();
-                if (workItemList == null)
-                {
-                    return null;
-                }
+                var workItemList = await _context.WorkItems.Include(x => x.Company).ToListAsync();
+                
+                if (workItemList == null) return null;
+               
                 return workItemList.AsReadOnly();
             }
         }

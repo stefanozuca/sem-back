@@ -27,7 +27,7 @@ namespace Sem.Application.Features.CompanyFeatures.Commands
                 company.Name = request.Name;
                 _context.Companies.Add(company);
                 await _context.SaveChangesAsync();
-                return company.Id;
+                return company.CompanyId;
             }
         }
     }

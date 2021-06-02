@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Sem.Persistance.Migrations
 {
-    public partial class DBInit : Migration
+    public partial class newintento : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,14 +14,14 @@ namespace Sem.Persistance.Migrations
                 name: "Companies",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    CompanyId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: false)
+                    Name = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Companies", x => x.Id);
+                    table.PrimaryKey("PK_Companies", x => x.CompanyId);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -29,30 +29,30 @@ namespace Sem.Persistance.Migrations
                 name: "WorkItems",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    WorkItemId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Titulo = table.Column<string>(type: "longtext", nullable: false)
+                    Title = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descripcion = table.Column<string>(type: "longtext", nullable: false)
+                    Description = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    EmpresaId = table.Column<int>(type: "int", nullable: false)
+                    CompanyId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WorkItems", x => x.Id);
+                    table.PrimaryKey("PK_WorkItems", x => x.WorkItemId);
                     table.ForeignKey(
-                        name: "FK_WorkItems_Companies_EmpresaId",
-                        column: x => x.EmpresaId,
+                        name: "FK_WorkItems_Companies_CompanyId",
+                        column: x => x.CompanyId,
                         principalTable: "Companies",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "CompanyId",
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkItems_EmpresaId",
+                name: "IX_WorkItems_CompanyId",
                 table: "WorkItems",
-                column: "EmpresaId");
+                column: "CompanyId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

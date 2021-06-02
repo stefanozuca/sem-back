@@ -38,7 +38,7 @@ namespace Sem.OfficeApp.Controllers.v1
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            return Ok(await Mediator.Send(new GetWorkItemByIdQuery { Id = id }));
+            return Ok(await Mediator.Send(new GetWorkItemByIdQuery { WorkItemId = id }));
         }
         /// <summary>
         /// Deletes WorkItem Entity based on Id.
@@ -48,7 +48,7 @@ namespace Sem.OfficeApp.Controllers.v1
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            return Ok(await Mediator.Send(new DeleteWorkItemByIdCommand { Id = id }));
+            return Ok(await Mediator.Send(new DeleteWorkItemByIdCommand { WorkItemId = id }));
         }
         /// <summary>
         /// Updates the WorkItem Entity based on Id.   
@@ -57,12 +57,8 @@ namespace Sem.OfficeApp.Controllers.v1
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPut("[action]")]
-        public async Task<IActionResult> Update(int id, UpdateWorkItemCommand command)
+        public async Task<IActionResult> Update(UpdateWorkItemCommand command)
         {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
             return Ok(await Mediator.Send(command));
         }
     }

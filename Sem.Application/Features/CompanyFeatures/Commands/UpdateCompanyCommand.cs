@@ -24,13 +24,13 @@ namespace Sem.Application.Features.CompanyFeatures.Commands
 
             public async Task<int> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
             {
-                var company = _context.Companies.Where(x => x.Id == request.Id).FirstOrDefault();
+                var company = _context.Companies.Where(x => x.CompanyId == request.Id).FirstOrDefault();
 
                 if (company == null) return default;
 
                 company.Name = request.Name;
                 await _context.SaveChangesAsync();
-                return company.Id;
+                return company.CompanyId;
             }
         }
     }

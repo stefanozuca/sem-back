@@ -12,7 +12,7 @@ namespace Sem.Application.Features.WorkItemFeatures.Queries
 {
     public class GetWorkItemByIdQuery : IRequest<WorkItem>
     {
-        public int Id { get; set; }
+        public int WorkItemId { get; set; }
         public class GetWorkItemByIdQueryHandler : IRequestHandler<GetWorkItemByIdQuery, WorkItem>
         {
             private readonly IApplicationDbContext _context;
@@ -23,7 +23,7 @@ namespace Sem.Application.Features.WorkItemFeatures.Queries
 
             public async Task<WorkItem> Handle(GetWorkItemByIdQuery request, CancellationToken cancellationToken)
             {
-                var workItem = _context.WorkItems.Where(x => x.Id == request.Id).FirstOrDefault();
+                var workItem = _context.WorkItems.Where(x => x.WorkItemId == request.WorkItemId).FirstOrDefault();
                 if (workItem == null) return null;
                 return workItem;
             }
