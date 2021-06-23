@@ -53,7 +53,6 @@ export default function WorkItem() {
     const obtenerObras = async () => {
         await axios.get(baseUrl)
             .then(response => {
-                console.log(response.data)
                 setData(response.data);
             })
             .catch(response => {
@@ -140,10 +139,10 @@ export default function WorkItem() {
         (caso === 'Editar') ? abrirCerrarModalEditar() : abrirCerrarModalEliminar()
     }
 
-    useEffect(async () => {
-        await obtenerObras();
-        await obtenerEmpresas();
-    }, {})
+    useEffect(() => {
+        obtenerObras();
+        obtenerEmpresas();
+    }, [])
 
     const bodyInsertar = (
         <div className={styles.modal}>

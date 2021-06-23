@@ -18,9 +18,9 @@ export default function Companies() {
             })
     }
 
-    useEffect(async () => {
-        await peticionGet();
-    }, {})
+    useEffect(() => {
+        peticionGet();
+    }, [])
 
     return (
 
