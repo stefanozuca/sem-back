@@ -20,5 +20,6 @@ namespace Sem.Persistance
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
         }
+
     }
 }

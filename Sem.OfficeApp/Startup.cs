@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Sem.Persistance;
 using Microsoft.OpenApi.Models;
 using Sem.Application;
+using Sem.Persistance.Context;
 
 namespace Sem.OfficeApp
 {
@@ -31,9 +32,9 @@ namespace Sem.OfficeApp
 
                 options.SwaggerDoc(groupName, new OpenApiInfo
                 {
-                    Title = $"Foo {groupName}",
+                    Title = $"SEM External API {groupName}",
                     Version = groupName,
-                    Description = "Foo API"
+                    Description = "External API for all the word"
                 });
             });
             #endregion
@@ -61,6 +62,7 @@ namespace Sem.OfficeApp
 
             // Configure MediatR
             services.AddApplication();
+
             // Configure persistance connection
             services.AddPersistence(Configuration);
         }
@@ -80,13 +82,13 @@ namespace Sem.OfficeApp
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseSpaStaticFiles();
+            //app.UseStaticFiles();
+            //app.UseSpaStaticFiles();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Foo API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SEM API V1");
             });
 
             app.UseRouting();
@@ -98,15 +100,15 @@ namespace Sem.OfficeApp
                     pattern: "{version}/{controller}/{action=Index}/{id?}");
             });
 
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "ClientApp";
+            //app.UseSpa(spa =>
+            //{
+            //    spa.Options.SourcePath = "ClientApp";
 
-                if (env.IsDevelopment())
-                {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
-                }
-            });
+            //    if (env.IsDevelopment())
+            //    {
+            //        spa.UseReactDevelopmentServer(npmScript: "start");
+            //    }
+            //});
         }
     }
 }

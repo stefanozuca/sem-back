@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sem.Application.Interfaces;
 using Sem.Domain.Entities;
+using Sem.Domain.External.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,8 +15,14 @@ namespace Sem.Persistance.Context
            : base(options)
         {
         }
-        public DbSet<WorkItem> WorkItems { get; set; }
+
         public DbSet<Company> Companies { get; set; }
+        public DbSet<Topic> Topics { get; set; }
+        public DbSet<Service> Services { get; set; }
+        public DbSet<Navigation> Navigations { get; set; }
+        public DbSet<HistoricalCounter> Counters { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
+        public DbSet<Blog> Blogs { get; set; }
 
         public async Task<int> SaveChangesAsync()
         {
@@ -25,10 +32,6 @@ namespace Sem.Persistance.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<WorkItem>()
-                .HasOne(c => c.Company);
-
         }
     }
 }

@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Sem.Domain.External\Sem.Domain.External.csproj" />
     <ProjectReference Include="..\Sem.Domain\Sem.Domain.csproj" />
   </ItemGroup>
 

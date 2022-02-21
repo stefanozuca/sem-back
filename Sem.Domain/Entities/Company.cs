@@ -7,6 +7,5 @@ namespace Sem.Domain.Entities
     {
         public int CompanyId { get; set; }
         public string Name { get; set; }
-        //public ICollection<WorkItem> WorkItems { get; set; }
     }
 }
