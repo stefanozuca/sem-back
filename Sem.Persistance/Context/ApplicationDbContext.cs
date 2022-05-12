@@ -2,9 +2,6 @@
 using Sem.Application.Interfaces;
 using Sem.Domain.Entities;
 using Sem.Domain.External.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Sem.Persistance.Context

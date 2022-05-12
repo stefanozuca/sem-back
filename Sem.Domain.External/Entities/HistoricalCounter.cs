@@ -4,7 +4,9 @@ namespace Sem.Domain.External.Entities
 {
     public class HistoricalCounter : BaseEntity
     {
-        public string Name { get; set; }
-        public int Quantity { get; set; }
+        public int Felices { get; set; }
+        public int Proyectos { get; set; }
+        public int Horas { get; set; }
+        public int Trabajadores { get; set; }
     }
 }
