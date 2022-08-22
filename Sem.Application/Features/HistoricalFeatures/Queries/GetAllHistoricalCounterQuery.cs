@@ -10,9 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sem.Application.Features.HistoricalFeatures.Queries
 {
-    public class GetAllHistoricalCounterQuery : IRequest<IEnumerable<HistoricalCounter>>
+    public class GetAllHistoricalCounterQuery : IRequest<HistoricalCounter>
     {
-        public class GetAllHistoricalCounterQueryHandler : IRequestHandler<GetAllHistoricalCounterQuery, IEnumerable<HistoricalCounter>>
+        public class GetAllHistoricalCounterQueryHandler : IRequestHandler<GetAllHistoricalCounterQuery, HistoricalCounter>
         {
             private readonly IApplicationDbContext _context;
             public GetAllHistoricalCounterQueryHandler(IApplicationDbContext context)
@@ -20,13 +20,9 @@ namespace Sem.Application.Features.HistoricalFeatures.Queries
                 _context = context;
             }
 
-            public async Task<IEnumerable<HistoricalCounter>> Handle(GetAllHistoricalCounterQuery request, CancellationToken cancellationToken)
+            public async Task<HistoricalCounter> Handle(GetAllHistoricalCounterQuery request, CancellationToken cancellationToken)
             {
-                var list = await _context.Counters.ToListAsync();
-
-                if (list == null) return null;
-
-                return list.AsReadOnly();
+                return await _context.Counters.FirstAsync();
             }
         }
     }
