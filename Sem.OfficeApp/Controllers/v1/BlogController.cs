@@ -20,6 +20,17 @@ namespace Sem.OfficeApp.Controllers.v1
         }
 
         /// <summary>
+        /// Gets all Blogs Favs.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("Favs")]
+        public async Task<IActionResult> GetAllFavs()
+        {
+            return Ok(await Mediator.Send(new GetAllBlogFavsQuery()));
+        }
+
+        /// <summary>
         /// Creates a New Blog.
         /// </summary>
         /// <param name="command"></param>
